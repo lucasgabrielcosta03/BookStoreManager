@@ -1,6 +1,7 @@
 package com.lucasgabriel.bookstoremanager.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity
@@ -8,12 +9,12 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @NotNull(message = "Title cannot be null")
     @Column(nullable = false, unique = true)
     private String title;
 
@@ -33,4 +34,7 @@ public class Book {
     @JoinColumn(name = "author_id")// relacionamento para a tabela de autor se sera a chave estrengeira author_id
     private Author author;
 
+    /*public long getId() {
+        return id;
+    }*/
 }
