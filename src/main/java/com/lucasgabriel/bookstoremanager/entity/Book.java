@@ -14,7 +14,8 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotNull(message = "Title cannot be null")
+
+
     @Column(nullable = false, unique = true)
     private String title;
 

@@ -30,20 +30,21 @@ public class BookUtils {
                 .title(faker.book().title())
                 .page(faker.number().numberBetween(0, 200))
                 .chapters(faker.number().numberBetween(1, 20))
-                .isbn("0-598-53436-8")
+                .isbn("0-596-52068-9")
                 .publisherName(faker.book().publisher())
                 .author(createFakeAuthor())
                 .build();
     }
 
-    public static String asJsonString(BookDTO bookDTO){
+    public static String asJsonString(BookDTO bookDTO) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
             objectMapper.registerModules(new JavaTimeModule());
+
             return objectMapper.writeValueAsString(bookDTO);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

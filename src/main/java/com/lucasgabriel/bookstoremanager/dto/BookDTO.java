@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class    BookDTO {
+public class BookDTO {
     private long id;
 
     @NotBlank
@@ -29,7 +29,8 @@ public class    BookDTO {
 
     @NotBlank
     @Size(max = 200)
-    @Pattern(regexp = "^(\\d{10}|\\d{13})$", message = "ISBN format invalid")
+    @Pattern(regexp = "(?:ISBN(?:-10)?:? )?(?=[0-9X]{10}$|(?=(?:[0-9]+[- ]){3})[- 0-9X]{13}$)[0-9]{1,5}[- ]?[0-9]+[- ]?[0-9]+[- ]?[0-9X]$",
+            message = "ISBN format invalid")
     private String isbn;
 
     @NotBlank

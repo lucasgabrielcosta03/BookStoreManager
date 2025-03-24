@@ -17,14 +17,10 @@ public class BookController {
     private BookService bookService;
 
     @Autowired
-    public BookController(BookService bookService) {
-        this.bookService = bookService;
-    }
+    public BookController(BookService bookService) {this.bookService = bookService; }
 
     @PostMapping
-    public MessageResponseDTO create(@RequestBody @Valid BookDTO bookDTO){
-       return bookService.create(bookDTO);
-    }
+    public MessageResponseDTO create(@RequestBody @Valid BookDTO bookDTO){return bookService.create(bookDTO);}
     @GetMapping("/test")
     public String tes(){
         return "Controller na rota test funcinando corretamente";

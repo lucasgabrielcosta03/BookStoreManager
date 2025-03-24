@@ -1,27 +1,34 @@
 package com.lucasgabriel.bookstoremanager.controller;
 
 import com.lucasgabriel.bookstoremanager.Service.BookService;
+
 import com.lucasgabriel.bookstoremanager.dto.BookDTO;
 import com.lucasgabriel.bookstoremanager.dto.MessageResponseDTO;
-import com.lucasgabriel.bookstoremanager.utils.BookUtils;
+
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import static com.lucasgabriel.bookstoremanager.utils.BookUtils.asJsonString;
+import static com.lucasgabriel.bookstoremanager.utils.BookUtils.createFakeBookDTO;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @ExtendWith(MockitoExtension.class)
 public class BookControllerTest {
+
+    public static final String BOOK_API_URL_PATH = "/api/v1/books";
     private MockMvc mockMvc;
 
     @Mock
@@ -34,35 +41,34 @@ public class BookControllerTest {
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(bookController)
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
-                .setViewResolvers(((viewName, locale) -> new MappingJackson2JsonView()))
+                .setViewResolvers((viewName, locale) -> new MappingJackson2JsonView())
                 .build();
     }
 
     @Test
-    void testWhenPOSTisCalledThenABooksShouldBeCreated() throws Exception {
-        BookDTO bookDTO = BookUtils.createFakeBookDTO();
+    void testWhenPOSTisCalledThenABookShouldBeCreated() throws Exception {
+        BookDTO bookDTO = createFakeBookDTO();
         MessageResponseDTO expectedMessageResponse = MessageResponseDTO.builder()
-                .message("Book Created with ID "+ bookDTO.getId())
+                .message("Book created with ID " + bookDTO.getId())
                 .build();
 
-        Mockito.when(bookService.create(bookDTO)).thenReturn(expectedMessageResponse);
+        when(bookService.create(bookDTO)).thenReturn(expectedMessageResponse);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/books")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(BookUtils.asJsonString(bookDTO)))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message", Is.is(expectedMessageResponse.getMessage())));
-
+        mockMvc.perform(post(BOOK_API_URL_PATH)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(bookDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message", Is.is(expectedMessageResponse.getMessage())));
     }
 
     @Test
     void testWhenPOSTwithInvalidISBNIsCalledThenBadRequestShouldBeReturned() throws Exception {
-        BookDTO bookDTO = BookUtils.createFakeBookDTO();
-        bookDTO.setIsbn("ISBN is invalid");
+        BookDTO bookDTO = createFakeBookDTO();
+        bookDTO.setIsbn("invalid isbn");
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/books")
+        mockMvc.perform(post(BOOK_API_URL_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(BookUtils.asJsonString(bookDTO)))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                        .content(asJsonString(bookDTO)))
+                .andExpect(status().isBadRequest());
     }
 }

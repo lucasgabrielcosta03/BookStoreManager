@@ -20,7 +20,6 @@ public class Author {
     @Column(nullable = false)
     private Integer age;
 
-    @Column(nullable = true)
-    private String country;
+
 
 }
