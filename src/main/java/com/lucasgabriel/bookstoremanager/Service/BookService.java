@@ -11,6 +11,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.Optional;
+
 @Service // Sera gerenciada pelo SPRING
 public class BookService {
     private BookRepository bookRepository;
@@ -27,5 +29,10 @@ public class BookService {
 
         return MessageResponseDTO.builder().
                 message("Book Created with ID "+ savedBook.getId()).build();
+    }
+
+    public BookDTO findById(long id) {
+        Optional<Book> optionalBook = bookRepository.findById(id);
+       return bookMapper.toDTO(optionalBook.get());
     }
 }

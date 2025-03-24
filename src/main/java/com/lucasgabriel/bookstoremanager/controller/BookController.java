@@ -21,6 +21,12 @@ public class BookController {
 
     @PostMapping
     public MessageResponseDTO create(@RequestBody @Valid BookDTO bookDTO){return bookService.create(bookDTO);}
+
+    @GetMapping(path = "/{id}")
+    //Mapeamento do valor que vier na requisição @PathVariable com id que ele ira chegar no livro
+    public BookDTO findById(@PathVariable long id){
+        return bookService.findById(id);
+    }
     @GetMapping("/test")
     public String tes(){
         return "Controller na rota test funcinando corretamente";
