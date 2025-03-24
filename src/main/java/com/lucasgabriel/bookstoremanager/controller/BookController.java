@@ -4,6 +4,7 @@ import com.lucasgabriel.bookstoremanager.Service.BookService;
 import com.lucasgabriel.bookstoremanager.dto.BookDTO;
 import com.lucasgabriel.bookstoremanager.dto.MessageResponseDTO;
 import com.lucasgabriel.bookstoremanager.entity.Book;
+import com.lucasgabriel.bookstoremanager.exception.BookNotFundException;
 import com.lucasgabriel.bookstoremanager.repository.BookRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class BookController {
 
     @GetMapping(path = "/{id}")
     //Mapeamento do valor que vier na requisição @PathVariable com id que ele ira chegar no livro
-    public BookDTO findById(@PathVariable long id){
+    public BookDTO findById(@PathVariable long id) throws BookNotFundException {
         return bookService.findById(id);
     }
     @GetMapping("/test")

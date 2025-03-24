@@ -3,6 +3,7 @@ package com.lucasgabriel.bookstoremanager.service;
 import com.lucasgabriel.bookstoremanager.Service.BookService;
 import com.lucasgabriel.bookstoremanager.dto.BookDTO;
 import com.lucasgabriel.bookstoremanager.entity.Book;
+import com.lucasgabriel.bookstoremanager.exception.BookNotFundException;
 import com.lucasgabriel.bookstoremanager.repository.BookRepository;
 import com.lucasgabriel.bookstoremanager.utils.BookUtils;
 import jdk.jfr.Enabled;
@@ -25,7 +26,7 @@ public class BookServiceTest {
     private BookService bookService;
 
     @Test
-    void whenGivenExistingIdThenReturnThisBook() {
+    void whenGivenExistingIdThenReturnThisBook() throws BookNotFundException {
         Book expectedFoundBook = BookUtils.createFakeBook();
         Mockito.when(bookRepository.findById(expectedFoundBook.getId())).thenReturn(Optional.of(expectedFoundBook));
 
